@@ -20,3 +20,6 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 }
+
+// 查看 jitpack 构建生成信息
+//https://jitpack.io/com/github/drumge/fat-aar-android
