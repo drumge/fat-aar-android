@@ -2,6 +2,7 @@ package com.kezong.fataar
 
 import com.android.build.gradle.api.LibraryVariant
 import com.android.build.gradle.internal.api.DefaultAndroidSourceSet
+import com.android.build.gradle.internal.tasks.MergeNativeLibsTask
 import com.android.build.gradle.tasks.ManifestProcessorTask
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -518,17 +519,19 @@ class VariantProcessor {
         if (mergeJniLibsTask == null) {
             throw new RuntimeException("Can not find task ${taskPath}!")
         }
+        String nativeLib = 'merge' + mVariant.name.capitalize() + 'NativeLibs'
+        MergeNativeLibsTask nativeLibTask = mProject.tasks.getByName(nativeLib)
 
         mergeJniLibsTask.configure {
             dependsOn(mExplodeTasks)
-
             doFirst {
                 for (archiveLibrary in mAndroidArchiveLibraries) {
                     if (archiveLibrary.jniFolder != null && archiveLibrary.jniFolder.exists()) {
-                        mProject.android.sourceSets.each {
-                            if (it.name == mVariant.name) {
-                                it.jniLibs.srcDir(archiveLibrary.jniFolder)
+                        if (mVariant.name == archiveLibrary.mVariantName) {
+                            if (nativeLibTask.externalLibNativeLibs.disallowChanges) {
+                                nativeLibTask.externalLibNativeLibs.disallowChanges = false
                             }
+                            nativeLibTask.externalLibNativeLibs.from(archiveLibrary.jniFolder)
                         }
                     }
                 }
