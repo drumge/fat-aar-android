@@ -50,4 +50,6 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation('androidx.appcompat:appcompat:1.2.0')
     implementation(name: 'fat-aar-final', ext: 'aar')
+
+    implementation 'com.github.kezong:fat-aar:hago-jitpack-feature-SNAPSHOT'
 }
